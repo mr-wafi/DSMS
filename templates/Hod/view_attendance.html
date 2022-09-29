@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="page-header">
+    <div class="row align-items-center">
+        <div class="col">
+            <h3 class="page-title">Attendance</h3>
+            <ul class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'staff_home' %}">Dashboard</a></li>
+                <li class="breadcrumb-item active">Attendance</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% if action is None %}
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-body">
+
+                <form action="?action=view_attendance" method="POST">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-12">
+                            <h5 class="form-title"><span>View Attendance</span></h5>
+                        </div>
+                        <div class="col-12 col-sm-6">
+                            <div class="form-group">
+                                <label>Subject</label>
+                                <select name="subject_id" class="form-control" id="">
+                                    <option value="#">Select--Subject</option>
+
+                                    {% for i in subject %}
+
+                                    <option value="{{ i.id }}">{{ i.name }}</option>
+
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-sm-6">
+                            <div class="form-group">
+                                <label>Session Year</label>
+                                <select name="session_year_id" class="form-control" id="">
+                                    <option value="#">Select--Session</option>
+                                    {% for i in session_year %}
+
+                                    <option value="{{ i.id }}">{{ i.session_start }} To {{ i.session_end}}</option>
+
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6">
+                            <div class="form-group">
+                                <label>Attendance Date</label>
+                                <input type="date" name="attendance_date" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary">Fetch Student</button>
+                        </div>
+                    </div>
+                </form>
+
+
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+{% else %}
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-body">
+
+                <div class="row">
+                    <div class="col-12">
+                        <h5 class="form-title"><span>View Attendance</span></h5>
+                    </div>
+                    <div class="col-12 col-sm-6">
+                        <div class="form-group">
+                            <label>Subject</label>
+                            <select name="subject_id" class="form-control" disabled="disabled">
+                                <option value="{{ get_subject.id }}">{{ get_subject}}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-sm-6">
+                        <div class="form-group">
+                            <label>Session Year</label>
+                            <select name="session_year_id" class="form-control" disabled="disabled">
+                                <option value="{{ get_session_year.id }}">{{ get_session_year }} To
+                                    {{ get_session_year }}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6">
+                        <div class="form-group">
+                            <label>Attendance Date</label>
+                            <input type="date" name="attendance_date" value="{{ attendance_date }}" disabled="disabled"
+                                class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-12">
+
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table id="table_id" class="table table-stripped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>ID</th>
+                                                        <th>Name</th>
+                                                        <th>Email</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for i in attendance_report %}
+                                                    <tr>
+                                                        <td>{{ i.student_id.admin.id }}</td>
+                                                        <td>{{ i.student_id.admin.first_name }}
+                                                            {{ i.student_id.admin.last_name }}</td>
+                                                        <td>{{ i.student_id.admin.email }}</td>
+                                                    </tr>
+                                                    {% endfor %}
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+
+        {% endif %}
+
+
+
+        {% endblock content %}

@@ -1,0 +1,433 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+{% block head %}
+<link rel="stylesheet" href="{% static 'assets/plugins/datatables/datatables.min.css' %}">
+
+{% endblock head %}
+<div class="page-header">
+    <div class="row align-items-center">
+        <div class="col">
+            <ul class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'Hod_home' %}">Dashboard</a></li>
+                <li class="breadcrumb-item active">Add Student</li>
+            </ul>
+            <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#exampleModal">
+                Add Student
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Button trigger modal -->
+
+<!-- Modal -->
+<div class="modal bd-example-modal-lg" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Student Add</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="container">
+                <form action="{% url 'add_student'%}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <div class="row">
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>First Name</label>
+                                <input type="text" class="form-control" required name="first_name">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Last Name</label>
+                                <input type="text" class="form-control" required name="last_name">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Username</label>
+                                <input type="text" class="form-control" id="username" required name="username">
+                                <span id="dd"></span>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" class="form-control" id="email" required name="email">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Password</label>
+                                <input type="password" required class="form-control" name="password">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Profile Pic</label>
+                                <input type="file" class="form-control" required name="profile_pic">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Address</label>
+                            <textarea name="address" required class="form-control" id="" cols="5" rows="3"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-12 col-sm-4">
+                            <div class="form-group">
+                                <label>Gender</label>
+                                <select class="form-control" name="gender">
+                                    <option>Select Gender</option>
+                                    <option>Female</option>
+                                    <option>Male</option>
+                                    <option>Others</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-4">
+                            <div class="form-group">
+                                <label>Course</label>
+                                <select class="form-control" name="course_id">
+                                    <option>Select Course</option>
+                                    {% for co in course %}
+                                    <option value="{{ co.id }}">{{ co.name }}</option>
+                                    {% endfor %}
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-4">
+                            <div class="form-group">
+                                <label>Session</label>
+                                <select class="form-control" name="session_year_id">
+                                    <option>Select Session</option>
+                                    {% for se in Syear %}
+                                    <option value="{{ se.id }}">{{ se.session_start}} To {{ se.session_end }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Add</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <!-- <div class="card-header">
+                <h5 class="card-title mb-2">Default Datatable</h5>
+
+            </div> -->
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="table_id" class="table table-stripped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Course</th>
+                                <th>Gender</th>
+                                <th>Address</th>
+                                <th>Session</th>
+                                <th>Created_at</th>
+                                <th>Updated_at</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in STOD %}
+                            <tr>
+
+
+
+                                <td>{{ i.id }}</td>
+                                <td>
+                                    <h2 class="table-avatar">
+                                        <a href="#" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle"
+                                                src="/{{ i.admin.profile_pic }}" alt="User Image"></a>
+                                        <a href="#">{{ i.admin.first_name }} {{i.admin.last_name }}</a>
+                                    </h2>
+                                </td>
+                                <td>{{ i.admin.email }}</td>
+                                <td>{{ i.course_id.name }}</td>
+                                <td>{{ i.gender }}</td>
+                                <td>{{ i.address }}</td>
+                                <td>{{ i.session_year_id.session_start }} To {{ i.session_year_id.session_end }}</td>
+                                <td>{{ i.created_at }}</td>
+                                <td>{{ i.updated_at }}</td>
+
+                                <td>
+
+                                    <button type="button" class="btn btn-info btn-sm" data-toggle="modal"
+                                        data-target="#edit{{ i.id }}">
+                                        <i class="fa fa-pen"></i>
+                                    </button>
+
+                                    <div class="modal bd-example-modal-sm" id="edit{{ i.id }}" tabindex="-1"
+                                        role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-lg" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Student Add</h5>
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="container">
+                                                    <form action="{% url 'edit_student' i.admin.id %}" method="post"
+                                                        enctype="multipart/form-data">
+                                                        {% csrf_token %}
+                                                        <div class="row">
+
+                                                            <div class="col-sm-6">
+                                                                <div class="form-group">
+                                                                    <label>First Name</label>
+                                                                    <input type="text" class="form-control"
+                                                                        value="{{ i.admin.first_name }}" required
+                                                                        name="first_name">
+
+                                                                    <input type="hidden" name="student_id"
+                                                                        value="{{ i.admin.id }}">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <div class="form-group">
+                                                                    <label>Last Name</label>
+                                                                    <input type="text" class="form-control"
+                                                                        value="{{ i.admin.last_name }}" required
+                                                                        name="last_name">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row">
+
+                                                            <div class="col-sm-6">
+                                                                <div class="form-group">
+                                                                    <label>Username</label>
+                                                                    <input type="text" class="form-control"
+                                                                        id="username" required name="username"
+                                                                        value="{{ i.admin.username }}">
+                                                                    <span id="dd"></span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <div class="form-group">
+                                                                    <label>Email</label>
+                                                                    <input type="email" class="form-control" id="email"
+                                                                        value="{{ i.admin.email }}" required
+                                                                        name="email">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row">
+                                                            <div class="col-sm-6">
+                                                                <div class="form-group">
+                                                                    <label>Password</label>
+                                                                    <input type="password" class="form-control"
+                                                                        name="password"
+                                                                        placeholder="Fill Only if you want to change Your Password">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <div class="form-group">
+                                                                    <label>Profile Pic</label>
+                                                                    <input type="file" class="form-control"
+                                                                        name="profile_pic">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-sm-12">
+                                                            <div class="form-group">
+                                                                <label>Address</label>
+                                                                <textarea name="address" required class="form-control"
+                                                                    id="" cols="5" rows="3">{{ i.address }}</textarea>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row">
+
+                                                            <div class="col-12 col-sm-4">
+                                                                <div class="form-group">
+                                                                    <label>Gender</label>
+                                                                    <select class="form-control" name="gender">
+                                                                        <option>{{ i.gender }}</option>
+                                                                        <option>Select Gender</option>
+                                                                        <option>Female</option>
+                                                                        <option>Male</option>
+                                                                        <option>Others</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-12 col-sm-4">
+                                                                <div class="form-group">
+                                                                    <label>Course</label>
+                                                                    <select class="form-control" name="course_id">
+                                                                        <option value="{{ i.course_id.id }}">
+                                                                            {{i.course_id.name }}</option>
+                                                                        <option>Select Course</option>
+                                                                        {% for co in course %}
+                                                                        <option value="{{ co.id }}">
+                                                                            {{ co.name }}
+                                                                        </option>
+                                                                        {% endfor %}
+
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-12 col-sm-4">
+                                                                <div class="form-group">
+                                                                    <label>Session</label>
+                                                                    <select class="form-control" name="session_year_id">
+                                                                        <option value="{{ i.session_year_id.id }}">
+                                                                            {{i.session_year_id.session_start }}
+                                                                            To
+                                                                            {{i.session_year_id.session_start }}
+                                                                        </option>
+                                                                        <option>Select Session</option>
+                                                                        {% for se in Syear %}
+                                                                        <option value="{{ se.id }}">
+                                                                            {{se.session_start}}
+                                                                            To
+                                                                            {{ se.session_end }}
+                                                                        </option>
+                                                                        {% endfor %}
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                </div>
+
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-dismiss="modal">Close</button>
+                                                    <button type="submit" class="btn btn-primary">Update</button>
+                                                </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
+                                        data-target="#delete{{ i.id }}">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+
+                                    <div class="modal bd-example-modal-sm" id="delete{{ i.id }}" tabindex="-1"
+                                        role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-md" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">delete</h5>
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="container">
+                                                    <form action="{% url 'delete_student' i.id %}" method="post"
+                                                        enctype="multipart/form-data">
+                                                        {% csrf_token %}
+
+                                                        are you sure you want to delete
+                                                </div>
+
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-dismiss="modal">Close</button>
+                                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                                </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </td>
+
+                            </tr>
+                            {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+        {% block js %}
+
+        <script src="{% static 'assets/plugins/datatables/jquery.dataTables.min.js' %}"></script>
+        <script src="{% static 'assets/plugins/datatables/datatables.min.js' %}"></script>
+
+
+        <script>
+
+
+            // $(document).ready(function () {
+
+            //     $("#username").change(function () {
+
+            //         var username = $(this).val();
+
+            //         $.ajax({
+            //             url: '/check_username/',
+            //             data: {
+            //                 'username': username
+            //             },
+            //             dataType: 'json',
+            //             success: function (data) {
+            //                 if (data.is_taken) {
+            //                     alert('A user with this username already exists')
+            //                 }
+            //             }
+            //         })
+            //     })
+
+            // });
+
+
+
+        </script>
+        {% endblock js %}
+
+        {% endblock content %}

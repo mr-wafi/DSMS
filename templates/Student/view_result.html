@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+{% block head %}
+<link rel="stylesheet" href="{% static 'assets/plugins/datatables/datatables.min.css' %}">
+
+{% endblock head %}
+<div class="page-header">
+    <div class="row align-items-center">
+        <div class="col">
+            <h3 class="page-title">View Result</h3>
+            <ul class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'Hod_home' %}">Dashboard</a></li>
+                <li class="breadcrumb-item active">Result</li>
+            </ul>
+        </div>
+
+    </div>
+
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <!-- <div class="card-header">
+                <h5 class="card-title mb-2">Default Datatable</h5>
+
+            </div> -->
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="table_id" class="table table-stripped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Subject </th>
+                                <th>Assignment Mark</th>
+                                <th>Exam Mark</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in result %}
+                            <tr>
+                                <td>{{ i.id }}</td>
+                                <td>{{ i.subject_id.name }}</td>
+                                <td>{{ i.assignment_mark }}</td>
+                                <td>{{ i.exam_mark }}</td>
+                                <td>
+                                    {% if mark >= 50 %}
+
+                                    <span class="badge badge-success">Pass</span>
+                                    {% else %}
+                                    <span class="badge badge-danger">Fail</span>
+
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

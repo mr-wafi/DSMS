@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+{% block head %}
+<link rel="stylesheet" href="{% static 'assets/plugins/datatables/datatables.min.css' %}">
+
+
+{% endblock head %}
+<div class="page-header">
+    <div class="row align-items-center">
+        <div class="col">
+            <ul class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'Hod_home' %}">Dashboard</a></li>
+                <li class="breadcrumb-item active">Leave Requests</li>
+            </ul>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-2">Student Leave Requests</h5>
+
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="table_id" class="table table-stripped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Leave Request Date</th>
+                                <th>Message</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in Sleave %}
+                            <tr>
+                                <td>{{ i.id }}</td>
+                                <td>{{ i.student_id.admin.first_name }} {{ i.student_id.admin.last_name }}</td>
+                                <td>{{ i.date }}</td>
+                                <td>{{ i.message }}</td>
+
+                                <td>
+
+                                    {% if i.status == 0 %}
+
+                                    <a href="{% url 'student_status_approved' i.id %}"
+                                        class="btn btn-success btn-sm">Approved</a>
+                                    <a href="{% url 'student_status_disapproved' i.id %}"
+                                        class="btn btn-danger btn-sm">Disapproved</a>
+
+                                    {% elif i.status == 1 %}
+
+                                    <button class="btn btn-info btn-sm" disabled="disabled">Approved</button>
+
+                                    {% else %}
+
+                                    <button class="btn btn-danger btn-sm" disabled="disabled">Disapproved</button>
+
+                                    {% endif %}
+                                </td>
+
+                            </tr>
+                            {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% endblock content %}

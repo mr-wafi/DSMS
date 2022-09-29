@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="page-header">
+    <div class="row align-items-center">
+        <div class="col">
+            <h3 class="page-title">Update Profile</h3>
+            <ul class="breadcrumb">
+                <li class="breadcrumb-item"><a href="subjects.html">Dashboard</a></li>
+                <li class="breadcrumb-item active">Update Profile</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="col-sm-12">
+    <div class="card">
+        <div class="card-body">
+            <form action="{% url 'update_profile'%}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="col-12">
+                    <h5 class="form-title"><span>Profile Update</span></h5>
+                </div>
+
+                <div class="col-sm-11">
+                    <div class="form-group">
+                        <label>Profile Pic</label>
+                        <input type="file" class="form-control" name="profile_pic">
+                    </div>
+                </div>
+                <div class="col-sm-11">
+                    <div class="form-group">
+                        <label>First Name</label>
+                        <input type="text" class="form-control" value="{{ user.first_name }}" name="first_name">
+                    </div>
+                </div>
+                <div class="col-sm-11">
+                    <div class="form-group">
+                        <label>Last Name</label>
+                        <input type="text" class="form-control" value="{{ user.last_name }}" name="last_name">
+                    </div>
+                </div>
+                <div class="col-sm-11">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" class="form-control" value="{{ user.email }}" readonly name="email">
+                    </div>
+                </div>
+                <div class="col-sm-11">
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" class="form-control" value="{{ user.username }}" readonly name="username">
+                    </div>
+                </div>
+                <div class="col-sm-11">
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" class="form-control"
+                            placeholder="fill only if you want to change current password" name="password">
+                    </div>
+                </div>
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary">Update Profile</button>
+                </div>
+            </form>
+        </div>
+
+        {% endblock content %}
