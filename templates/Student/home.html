@@ -1,4 +1,143 @@
 {% extends 'base.html' %}
 {% block content %}
-template
-{% endblock content %}
+
+<div class="page-header">
+    <div class="row">
+        <div class="col-sm-12">
+            <h3 class="page-title">
+                {% if request.user.user_type == "3" %}
+                STUDENT
+                {% endif %}
+                !</h3>
+            <ul class="breadcrumb">
+                <li class="breadcrumb-item active">Dashboard</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xl-3 col-sm-6 col-12 d-flex">
+        <div class="card bg-one w-100">
+            <div class="card-body">
+                <div class="db-widgets d-flex justify-content-between align-items-center">
+                    <div class="db-icon">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                    <div class="db-info">
+                        <h3>{{ total_attendance }}</h3>
+                        <h6>Total Attendance</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-sm-6 col-12 d-flex">
+        <div class="card bg-two w-100">
+            <div class="card-body">
+                <div class="db-widgets d-flex justify-content-between align-items-center">
+                    <div class="db-icon">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                    </div>
+                    <div class="db-info">
+                        <h3>{{ staff }}</h3>
+                        <h6>Staff</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-sm-6 col-12 d-flex">
+        <div class="card bg-three w-100">
+            <div class="card-body">
+                <div class="db-widgets d-flex justify-content-between align-items-center">
+                    <div class="db-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <div class="db-info">
+                        <h3>{{ course }}</h3>
+                        <h6>Courses</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-sm-6 col-12 d-flex">
+        <div class="card bg-four w-100">
+            <div class="card-body">
+                <div class="db-widgets d-flex justify-content-between align-items-center">
+                    <div class="db-icon">
+                        <i class="fas fa-book-reader"></i>
+                    </div>
+                    <div class="db-info">
+                        <h3>{{ subject }}</h3>
+                        <h6>Subjects</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 col-lg-6">
+        <div class="card card-chart">
+            <div class="card-header">
+                <div class="row align-items-center">
+                    <div class="col-6">
+                        <h5 class="card-title">All Data</h5>
+                    </div>
+
+                </div>
+            </div>
+            <div class="card-body">
+                <div id="all_details"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12 col-lg-6">
+        <div class="card card-chart">
+            <div class="card-header">
+                <div class="row align-items-center">
+                    <div class="col-6">
+                        <h5 class="card-title">Number of Students</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div id="student_gender"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 col-lg-6">
+        <div class="card card-chart">
+            <div class="card-header">
+                <div class="row align-items-center">
+                    <div class="col-6">
+                        <h5 class="card-title">Student Staff</h5>
+                    </div>
+
+                </div>
+            </div>
+            <div class="card-body">
+                <div id="stud_staff"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12 col-lg-6">
+        <div class="card card-chart">
+            <div class="card-header">
+                <div class="row align-items-center">
+                    <div class="col-6">
+                        <h5 class="card-title">Course And Subject</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div id="course_subject"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -11,8 +11,12 @@ urlpatterns = [
     path('profile', views.PROFILE, name='profile'),
     path('profile/update', views.PROFILE_UPDATE, name='update_profile'),
 
-    # AJAX CALL
+
     # path('check_username', views.check_username, name='check_username'),
+    path('check_email_exist/', Hod_Views.check_email_exist,
+         name="check_email_exist"),
+    path('check_username_exist/', Hod_Views.check_username_exist,
+         name="check_username_exist"),
 
 
     # HOD

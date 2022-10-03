@@ -2,10 +2,18 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .models import *
 from django.contrib import messages
+from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+
+from django.core import serializers
+import json
 
 
 @login_required(login_url='/')
 def HOME(request):
+    # if request.user.is_authenticated:
+    #     return redirect('Hod_home')
+
     student = Student.objects.count()
     staff = Staff.objects.count()
     course = Course.objects.count()
@@ -133,6 +141,30 @@ def Delete_Student(request, id):
 
 ########################################################################
 
+# AJAX CALLS
+
+
+@csrf_exempt
+def check_email_exist(request):
+    email = request.POST.get("email")
+    user_obj = CustomUser.objects.filter(email=email).exists()
+    if user_obj:
+        return HttpResponse(True)
+    else:
+        return HttpResponse(False)
+
+
+@csrf_exempt
+def check_username_exist(request):
+    username = request.POST.get("username")
+    user_obj = CustomUser.objects.filter(username=username).exists()
+    if user_obj:
+        return HttpResponse(True)
+    else:
+        return HttpResponse(False)
+
+
+#######################################################################
 # STAFF START
 
 

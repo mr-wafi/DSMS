@@ -60,14 +60,14 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label>Username</label>
-                                <input type="text" class="form-control" id="username" required name="username">
+                                <input type="text" class="form-control" id="id_username" required name="username">
                                 <span id="dd"></span>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label>Email</label>
-                                <input type="email" class="form-control" id="email" required name="email">
+                                <input type="email" class="form-control" id="id_email" required name="email">
                             </div>
                         </div>
                     </div>
@@ -337,32 +337,72 @@
         {% block js %}
 
         <script>
+            $(document).ready(function () {
+                // keyup event will be triggered when user leaves keyboard
+                $("#id_email").keyup(function () {
+                    var email = $(this).val();
 
+                    if (email != "") {
+                        $.ajax({
+                            url: '{% url 'check_email_exist' %}',
+                            type: 'POST',
+                            data: { email: email }
+                        })
+                            .done(function (response) {
+                                //console.log(response);
 
-            // $(document).ready(function () {
+                                if (response == "True") {
+                                    $(".email_error").remove();
+                                    $("<span class='email_error' style='color: red; padding: 5px; font-weight: bold;'> Email Already Exists. </span>").insertAfter("#id_email")
+                                }
+                                else {
+                                    $(".email_error").remove();
+                                    $("<span class='email_error' style='color: green; padding: 5px; font-weight: bold;'> Email Available. </span>").insertAfter("#id_email")
+                                }
+                            })
 
-            //     $("#username").change(function () {
+                            .fail(function () {
+                                console.log("Failed");
+                            })
+                    }
+                    else {
+                        $(".email_error").remove();
+                    }
 
-            //         var username = $(this).val();
+                })
 
-            //         $.ajax({
-            //             url: '/check_username/',
-            //             data: {
-            //                 'username': username
-            //             },
-            //             dataType: 'json',
-            //             success: function (data) {
-            //                 if (data.is_taken) {
-            //                     alert('A user with this username already exists')
-            //                 }
-            //             }
-            //         })
-            //     })
+                $("#id_username").keyup(function () {
+                    var username = $(this).val();
 
-            // });
+                    if (username != "") {
+                        $.ajax({
+                            url: '{% url 'check_username_exist' %}',
+                            type: 'POST',
+                            data: { username: username }
+                        })
+                            .done(function (response) {
+                                //console.log(response);
 
+                                if (response == "True") {
+                                    $(".username_error").remove();
+                                    $("<span class='username_error' style='color: red; padding: 5px; font-weight: bold;'> Username Already Exists. </span>").insertAfter("#id_username")
+                                }
+                                else {
+                                    $(".username_error").remove();
+                                    $("<span class='username_error' style='color: green; padding: 5px; font-weight: bold;'> Username Available. </span>").insertAfter("#id_username")
+                                }
+                            })
 
+                            .fail(function () {
+                                console.log("Failed");
+                            })
+                    }
+                    else {
+                        $(".username_error").remove();
+                    }
 
+                })
+            })
         </script>
         {% endblock js %}
 

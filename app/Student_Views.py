@@ -1,13 +1,51 @@
 from django.shortcuts import redirect, render
-from .models import Attendance, Attendance_Report, CustomUser, Staff, Student, Student_Feedback, Student_Leave, Student_Notification, Student_Result, Subject
+from .models import *
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
 
+# @login_required(login_url='/')
+# def HOME(request):
+#     context = {}
+
+#     return render(request, 'Student/home.html', context)
+
 @login_required(login_url='/')
 def HOME(request):
-    context = {}
+    student_obj = Student.objects.get(admin=request.user.id)
+    total_attendance = Attendance_Report.objects.filter(
+        student_id=student_obj).count()
+    attendance_present = Attendance_Report.objects.filter(
+        student_id=student_obj).count()
+    attendance_absent = Attendance_Report.objects.filter(
+        student_id=student_obj).count()
 
+    course_obj = Course.objects.get(id=student_obj.course_id.id)
+    total_subjects = Subject.objects.filter(course_id=course_obj).count()
+
+    subject_name = []
+    data_present = []
+    data_absent = []
+    subject_data = Subject.objects.filter(course_id=student_obj.course_id)
+    for subject in subject_data:
+        attendance = Attendance.objects.filter(subject_id=subject.id)
+        attendance_present_count = Attendance_Report.objects.filter(
+            attendance_id__in=attendance, student_id=student_obj.id).count()
+        attendance_absent_count = Attendance_Report.objects.filter(
+            attendance_id__in=attendance, student_id=student_obj.id).count()
+        subject_name.append(subject.name)
+        data_present.append(attendance_present_count)
+        data_absent.append(attendance_absent_count)
+
+    context = {
+        "total_attendance": total_attendance,
+        "attendance_present": attendance_present,
+        "attendance_absent": attendance_absent,
+        "total_subjects": total_subjects,
+        "subject_name": subject_name,
+        "data_present": data_present,
+        "data_absent": data_absent
+    }
     return render(request, 'Student/home.html', context)
 
 
